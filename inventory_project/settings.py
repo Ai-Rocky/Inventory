@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'main_app',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -49,8 +50,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # CROS
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'inventory_project.urls'
 
 TEMPLATES = [
@@ -78,7 +83,7 @@ WSGI_APPLICATION = 'inventory_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'inventory',
+        'NAME': 'Inventory',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': '127.0.0.1',

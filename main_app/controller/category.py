@@ -13,11 +13,11 @@ def list(request):
         model = Category.objects.all()
         serializer = CategorySerializer(
             model, many=True, context={"request": request})
-        data = serializer.data
-        return Response({'data': data})
+
+        return Response({"status": True, "getList": serializer.data})
 
     except BaseException as error:
-        return Response({'error': str(error)})
+        return Response({"status": "error", "errorMessage": str(error)})
 
 
 @api_view(['GET'])
@@ -27,11 +27,11 @@ def single(request, id):
         model = Category.objects.get(pk=id)
         serializer = CategorySerializer(
             model, context={"request": request})
-        data = serializer.data
-        return Response({'data': data})
+
+        return Response({"status": True, "getSingle": serializer.data})
 
     except BaseException as error:
-        return Response({'error': str(error)})
+        return Response({"status": "error", "errorMessage": str(error)})
 
 
 @api_view(['POST'])
@@ -43,12 +43,12 @@ def create(request):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response({"status": True, "postMessage": "Create Success"})
 
-        return Response(serializer.errors)
+        return Response({"status": False, "postError": serializer.errors})
 
     except BaseException as error:
-        return Response({'error': str(error)})
+        return Response({"status": "error", "errorMessage": str(error)})
 
 
 @api_view(['PATCH'])
@@ -61,12 +61,12 @@ def edit(request, id):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response({"status": True, "patchMessage": "Update Success"})
 
-        return Response(serializer.errors)
+        return Response({"status": False, "patchError": serializer.errors})
 
     except BaseException as error:
-        return Response({'error': str(error)})
+        return Response({"status": "error", "errorMessage": str(error)})
 
 
 @api_view(['DELETE'])
@@ -74,11 +74,9 @@ def delete(request, id):
 
     try:
         model = Category.objects.get(pk=id)
-        categoryName = model.Name
-
         model.delete()
 
-        return Response({'Success': f'The Category {categoryName} is Deleted'})
+        return Response({"status": True, "deleteMessage": "Delete Success"})
 
     except BaseException as error:
-        return Response({'error': str(error)})
+        return Response({"status": "error", "errorMessage": str(error)})

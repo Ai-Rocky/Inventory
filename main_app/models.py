@@ -1,4 +1,22 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+
+class MyUser(models.Model):
+    Name = models.CharField(max_length=50, unique=True)
+    Email = models.CharField(max_length=100, unique=True)
+    Password = models.CharField(max_length=20)
+    Role = models.CharField(max_length=20)
+    Outlet = models.ForeignKey(
+        'Outlet', on_delete=models.CASCADE)
+
+
+class Outlet(models.Model):
+    Name = models.CharField(max_length=50, unique=True)
+    Address = models.CharField(max_length=100, unique=True)
+    Number = models.BigIntegerField(unique=True, null=True)
+    Email = models.CharField(max_length=100, unique=True, null=True)
+    Note = models.CharField(max_length=500, null=True)
 
 
 class Category(models.Model):
@@ -21,43 +39,51 @@ class Cost(models.Model):
     Note = models.CharField(max_length=500, null=True)
 
 
-class Product(models.Model):
-    SKU = models.CharField(max_length=100, unique=True)
-    Category = models.ForeignKey(
-        'Category', on_delete=models.SET_NULL, null=True)
-    Brand = models.ForeignKey('Brand', on_delete=models.SET_NULL, null=True)
-    Unit = models.ForeignKey('Unit', on_delete=models.SET_NULL, null=True)
-    Name = models.CharField(max_length=100, unique=True)
-    Mfg = models.DateField(null=True)
-    Exp = models.DateField(null=True)
-    Details = models.TextField()
-
-
 class Supplier(models.Model):
     Company = models.CharField(max_length=100, unique=True)
     Owner = models.CharField(max_length=100, unique=True, null=True)
-    Number = models.IntegerField(unique=True, null=True)
+    Number = models.BigIntegerField(unique=True, null=True)
     Email = models.CharField(max_length=100, unique=True, null=True)
-    Address = models.CharField(max_length=100, unique=True, null=True)
+    Address = models.CharField(max_length=100, null=True)
     Note = models.CharField(max_length=500, null=True)
 
 
+class Customer(models.Model):
+    Name = models.CharField(max_length=100)
+    Number = models.BigIntegerField(unique=True)
+    Email = models.CharField(max_length=100, unique=True, null=True)
+    Address = models.CharField(max_length=100, null=True)
+    Note = models.CharField(max_length=500, null=True)
+
+
+class Product(models.Model):
+    SKU = models.CharField(max_length=100, unique=True, editable=False)
+    Category = models.ForeignKey(
+        'Category', on_delete=models.CASCADE)
+    Brand = models.ForeignKey('Brand', on_delete=models.CASCADE)
+    Unit = models.ForeignKey('Unit', on_delete=models.CASCADE)
+    Name = models.CharField(max_length=100, unique=True)
+    Mfg = models.DateField(null=True)
+    Exp = models.DateField(null=True)
+    Details = models.TextField(null=True)
+
+
 class Purchase(models.Model):
+    InvoiceNumber = models.CharField(
+        max_length=100, unique=True, editable=False)
+    Outlet = models.ForeignKey(
+        'Outlet', on_delete=models.CASCADE)
     Supplier = models.ForeignKey(
-        'Supplier', on_delete=models.SET_NULL, null=True)
-    SalesMan = models.CharField(max_length=100, null=True)
-    Number = models.IntegerField(unique=True, null=True)
-    Receiver = models.CharField(max_length=100, null=True)
-    Date = models.DateTimeField(auto_now=True)
-    PaymentStatus = models.CharField(max_length=100)
+        'Supplier', on_delete=models.CASCADE)
+    Discount = models.FloatField(null=True)
+    Date = models.DateTimeField()
 
 
 class PurchaseItem(models.Model):
     Purchase = models.ForeignKey(
-        'Purchase', on_delete=models.SET_NULL, null=True)
+        'Purchase', on_delete=models.CASCADE)
     Product = models.ForeignKey(
-        'Product', on_delete=models.SET_NULL, null=True)
-    SalesMan = models.CharField(max_length=100, null=True)
+        'Product', on_delete=models.CASCADE)
     PurchasePrice = models.FloatField()
     SalePrice = models.FloatField()
     Quantity = models.IntegerField()
@@ -65,14 +91,41 @@ class PurchaseItem(models.Model):
 
 class PurchaseCost(models.Model):
     Purchase = models.ForeignKey(
-        'Purchase', on_delete=models.SET_NULL, null=True)
+        'Purchase', on_delete=models.CASCADE)
     Cost = models.ForeignKey(
-        'Cost', on_delete=models.SET_NULL, null=True)
+        'Cost', on_delete=models.CASCADE)
     Amount = models.FloatField()
 
 
 class PurchasePayment(models.Model):
     Purchase = models.ForeignKey(
-        'Purchase', on_delete=models.SET_NULL, null=True)
+        'Purchase', on_delete=models.CASCADE)
     Amount = models.FloatField()
-    Date = models.DateTimeField(auto_now=True)
+    Date = models.DateTimeField()
+
+
+class Sale(models.Model):
+    InvoiceNumber = models.CharField(
+        max_length=100, unique=True, editable=False)
+    Outlet = models.ForeignKey(
+        'Outlet', on_delete=models.CASCADE)
+    Customer = models.ForeignKey(
+        'Customer', on_delete=models.CASCADE)
+    Discount = models.FloatField(null=True)
+    Date = models.DateTimeField()
+
+
+class SaleItem(models.Model):
+    Sale = models.ForeignKey(
+        'Sale', on_delete=models.CASCADE)
+    Product = models.ForeignKey(
+        'Product', on_delete=models.CASCADE)
+    Price = models.FloatField()
+    Quantity = models.IntegerField()
+
+
+class SalePayment(models.Model):
+    Sale = models.ForeignKey(
+        'Sale', on_delete=models.CASCADE)
+    Amount = models.FloatField()
+    Date = models.DateTimeField()
