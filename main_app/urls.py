@@ -3,6 +3,7 @@ from main_app.controller import myuser, manager, stuff, home, outlet, category, 
 
 urlpatterns = [
     path('user/login/', myuser.login),
+    path('user/update/<id>/', myuser.update),
 
     path('home/purchase/', home.purchase),
     path('home/sale/', home.sale),

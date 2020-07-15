@@ -4,6 +4,7 @@ from rest_framework import status
 
 from main_app.serializers import *
 from main_app.models import *
+from datetime import timedelta, date
 import math
 
 
@@ -15,12 +16,17 @@ def purchase(request):
         startDate = request.data[1]
         endDate = request.data[2]
 
+        endDate = date.fromisoformat(endDate)
+        endDate = endDate + timedelta(days=1)
+
         if(outlet == "all"):
             if(startDate == endDate):
                 purchases = Purchase.objects.filter(Date__date=startDate)
             else:
                 purchases = Purchase.objects.filter(
                     Date__range=(startDate, endDate))
+                # purchases = Purchase.objects.filter(
+                #     Date__gte=startDate, Date__lte=endDate)
         else:
             if(startDate == endDate):
                 purchases = Purchase.objects.filter(
@@ -69,6 +75,9 @@ def sale(request):
         outlet = request.data[0]
         startDate = request.data[1]
         endDate = request.data[2]
+
+        endDate = date.fromisoformat(endDate)
+        endDate = endDate + timedelta(days=1)
 
         if(outlet == "all"):
             if(startDate == endDate):

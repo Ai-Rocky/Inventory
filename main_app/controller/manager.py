@@ -11,7 +11,7 @@ def list(request):
 
     try:
         model = MyUser.objects.all()
-        serializer = MyUserSerializer(
+        serializer = MyUserRelationalSerializer(
             model, many=True, context={"request": request})
 
         return Response({"status": True, "getList": serializer.data})

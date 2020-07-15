@@ -17,3 +17,21 @@ def login(request):
 
     except BaseException as error:
         return Response({"status": False, "login": str(error)})
+
+
+@api_view(['PATCH'])
+def update(request, id):
+
+    try:
+        model = MyUser.objects.get(pk=id)
+        serializer = MyUserSerializer(model, data=request.data, context={
+            "request": request}, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": True, "patchMessage": "Update Success"})
+
+        return Response({"status": False, "patchError": serializer.errors})
+
+    except BaseException as error:
+        return Response({"status": "error", "errorMessage": str(error)})

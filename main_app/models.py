@@ -18,25 +18,40 @@ class Outlet(models.Model):
     Email = models.CharField(max_length=100, unique=True, null=True)
     Note = models.CharField(max_length=500, null=True)
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Category(models.Model):
     Name = models.CharField(max_length=50, unique=True)
     Note = models.CharField(max_length=500, null=True)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Brand(models.Model):
     Name = models.CharField(max_length=50, unique=True)
     Note = models.CharField(max_length=500, null=True)
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Unit(models.Model):
     Name = models.CharField(max_length=50, unique=True)
     Note = models.CharField(max_length=500, null=True)
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Cost(models.Model):
     Name = models.CharField(max_length=50, unique=True)
     Note = models.CharField(max_length=500, null=True)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Supplier(models.Model):
@@ -47,6 +62,9 @@ class Supplier(models.Model):
     Address = models.CharField(max_length=100, null=True)
     Note = models.CharField(max_length=500, null=True)
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Customer(models.Model):
     Name = models.CharField(max_length=100)
@@ -54,6 +72,9 @@ class Customer(models.Model):
     Email = models.CharField(max_length=100, unique=True, null=True)
     Address = models.CharField(max_length=100, null=True)
     Note = models.CharField(max_length=500, null=True)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Product(models.Model):
@@ -67,6 +88,9 @@ class Product(models.Model):
     Exp = models.DateField(null=True)
     Details = models.TextField(null=True)
 
+    class Meta:
+        ordering = ['-id']
+
 
 class Purchase(models.Model):
     InvoiceNumber = models.CharField(
@@ -78,6 +102,9 @@ class Purchase(models.Model):
     Discount = models.FloatField(null=True)
     Date = models.DateTimeField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class PurchaseItem(models.Model):
     Purchase = models.ForeignKey(
@@ -88,6 +115,9 @@ class PurchaseItem(models.Model):
     SalePrice = models.FloatField()
     Quantity = models.IntegerField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class PurchaseCost(models.Model):
     Purchase = models.ForeignKey(
@@ -96,12 +126,18 @@ class PurchaseCost(models.Model):
         'Cost', on_delete=models.CASCADE)
     Amount = models.FloatField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class PurchasePayment(models.Model):
     Purchase = models.ForeignKey(
         'Purchase', on_delete=models.CASCADE)
     Amount = models.FloatField()
     Date = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Sale(models.Model):
@@ -114,6 +150,9 @@ class Sale(models.Model):
     Discount = models.FloatField(null=True)
     Date = models.DateTimeField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class SaleItem(models.Model):
     Sale = models.ForeignKey(
@@ -123,9 +162,15 @@ class SaleItem(models.Model):
     Price = models.FloatField()
     Quantity = models.IntegerField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class SalePayment(models.Model):
     Sale = models.ForeignKey(
         'Sale', on_delete=models.CASCADE)
     Amount = models.FloatField()
     Date = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-id']
